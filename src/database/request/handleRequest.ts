@@ -23,7 +23,7 @@ export async function handleDatabaseRequest<O extends Model<any>>(
   m: ModelFunctionList,
   obj: O,
   val?: ExtractType<O>,
-  filter?: { [P in keyof ExtractType<O>]: number | string },
+  filter?: { [P in keyof ExtractType<O>]: number | string | boolean },
   modifiers?: Modifier<O>,
   auth?: true
 ): Promise<any> {
@@ -44,7 +44,9 @@ export async function handleDatabaseRequest<O extends Model<any>>(
               String(process.env.JWT_SECRET)
             ),
           }
-      : result;
+      : result
+      ? result
+      : "This ressource doesn't exist";
   } catch (err) {
     return err;
   }

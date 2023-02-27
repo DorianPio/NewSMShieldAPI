@@ -5,5 +5,4 @@ export async function passwordCheckEquality(req: any, res: any, data: {}) {
   if (!data) {
     throw new Error(badPassword);
   }
-  console.log(data);
 }

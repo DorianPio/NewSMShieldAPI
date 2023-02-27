@@ -5,24 +5,84 @@ import hash from "object-hash";
 import {
   checkIfUserDoesntExist,
   checkIfUserExist,
-} from "../../../middlewares/checkUser";
+} from "../../middlewares/checkUser";
 import { passwordCheckEquality } from "../../../../types/data/passwordCheck";
+import { getEmailByToken } from "../../../../utils/getEmailByToken";
 
 export const userRoutes = (): Router[] => {
   const routers: Router[] = makeRoute(User, [
     {
       name: "GetUsers",
+      description: "Get all the users",
       type: "SimpleRequest",
       path: "/users",
       filter: [],
       functionPropeties: {
         filter: { __v: 0 },
         requestFunction: "find",
-        modifiers: {},
+        modifiers: { sort: "email" },
       },
       request: "get",
       protectedRoute: true,
     },
+
+    {
+      name: "GetUser",
+      description: "Get user by ID",
+      type: "SimpleRequest",
+      path: "/user",
+      filter: [
+        {
+          key: "_id",
+          getter: "query",
+        },
+      ],
+      functionPropeties: {
+        filter: { __v: 0 },
+        requestFunction: "findOne",
+      },
+      request: "get",
+      protectedRoute: true,
+    },
+
+    {
+      name: "GetUser",
+      description: "Get information about current user",
+      type: "SimpleRequest",
+      path: "/me",
+      filter: [
+        {
+          key: "email",
+          getter: (req) => getEmailByToken(req.get("Authorization")),
+        },
+      ],
+      functionPropeties: {
+        filter: { __v: 0 },
+        requestFunction: "findOne",
+      },
+      request: "get",
+      protectedRoute: true,
+    },
+
+    {
+      name: "GetUser",
+      description: "Get information about current user",
+      type: "SimpleRequest",
+      path: "/user/email",
+      filter: [
+        {
+          key: "email",
+          getter: "query",
+        },
+      ],
+      functionPropeties: {
+        filter: { __v: 0 },
+        requestFunction: "findOne",
+      },
+      request: "get",
+      protectedRoute: true,
+    },
+
     {
       name: "DeleteUser",
       description: "Delete a user from email",
@@ -38,8 +98,14 @@ export const userRoutes = (): Router[] => {
         requestFunction: "deleteOne",
       },
       request: "delete",
-      protectedRoute: false,
+      protectedRoute: true,
     },
+    /**
+     * Auth
+     *
+     * All the route under this are not protected cause it's auth Routes
+     *
+     */
     {
       name: "Register",
       description: "Register a new user",

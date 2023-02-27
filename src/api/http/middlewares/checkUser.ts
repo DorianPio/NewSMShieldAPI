@@ -1,6 +1,12 @@
-import { User } from "../../database/Schema/users";
-import { userAlreadyExist, userDoesntExist } from "../../types/const/error";
-import { executeDBFunction } from "../../types/const/functions/database/databaseFunction";
+import { User } from "../../../database/Schema/users";
+import {
+  userAlreadyExist,
+  userDoesntExist,
+  userNeedToBeAdmin,
+} from "../../../types/const/error";
+import { executeDBFunction } from "../../../types/const/functions/database/databaseFunction";
+import { displayInColor } from "../../../types/const/functions/displayInColor";
+import { getEmailByToken } from "../../../utils/getEmailByToken";
 
 /**
  * Check if a user exists in the database with the provided email.
@@ -35,5 +41,17 @@ export const checkIfUserDoesntExist = async (req: any): Promise<void> => {
   );
   if (result) {
     throw new Error(userAlreadyExist);
+  }
+};
+
+export const checkIfUserIsAdmin = async (req: any): Promise<void> => {
+  const result = await executeDBFunction(
+    User,
+    { email: await getEmailByToken(req.get("Authorization")) },
+    { role: 1 },
+    "findOne"
+  );
+  if (result.role !== "admin") {
+    throw new Error(userNeedToBeAdmin);
   }
 };

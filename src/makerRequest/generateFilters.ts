@@ -23,13 +23,13 @@ export async function generateFilters<T extends Model<any>>(
   for (const filter of creator.filter) {
     if (typeof filter !== "object") {
       const queryParam = req.query[filter as any];
-      if (!queryParam) {
+      if (queryParam === undefined) {
         throw new Error(missingError + filter.toString());
       }
       filters[filter] = queryParam;
     } else {
       filters[filter.key] = await generateFilterValue(filter, req, res);
-      if (!filters[filter.key]) {
+      if (filters[filter.key] === undefined) {
         throw new Error(missingError + filter.key.toString());
       }
     }

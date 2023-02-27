@@ -1,8 +1,9 @@
 import { Router } from "express";
-import { userRoutes } from "../http/routes/user";
+import { articlesRoutes } from "../routes/article";
+import { userRoutes } from "../routes/user";
 
 export function mergeRoutes(): Router[] {
-  const routesArrays: Router[][] = [userRoutes()];
+  const routesArrays: Router[][] = [userRoutes(), articlesRoutes()];
 
   const finalArray: Router[] = routesArrays.reduce(
     (acc, cur) => acc.concat(cur),

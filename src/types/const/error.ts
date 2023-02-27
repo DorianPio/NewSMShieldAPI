@@ -13,3 +13,5 @@ export const userDoesntExist: string = "User doesn't exist";
 export const userAlreadyExist: string = "User already exist";
 
 export const badPassword: string = "Bad password";
+
+export const userNeedToBeAdmin: string = "You don't have permission to do that";

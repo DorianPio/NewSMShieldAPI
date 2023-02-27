@@ -76,6 +76,31 @@ export type ModelFunctionList = TMP4<ModelFunctions>;
 type RequestAvailable = "get" | "delete" | "put" | "patch" | "post";
 
 type operationAfter = ((req: any, res: any, data: any) => void)[];
+// type test = ExtractType<typeof User>;
+
+type test = {
+  email?: string;
+  password?: string;
+  name?: string;
+  // ...ajoutez les autres propriétés ici
+  validated?: boolean;
+};
+
+type ExtractFromSchema<T extends Model<any>> = {
+  [K in keyof T]: T[K];
+} & {};
+
+type onlyTestTypes<T extends Model<any>> = Exclude<
+  keyof ExtractFromSchema<T>,
+  keyof {}
+>;
+
+type PickType<T extends Model<any>> = Pick<
+  ExtractFromSchema<T>,
+  onlyTestTypes<T>
+>;
+
+type AllTestTypes<T extends Model<any>> = PickType<T>[keyof PickType<T>];
 
 /**
  * Extract the basic type given to the Model
@@ -108,7 +133,7 @@ export type Creator<T extends Model<any>> = {
   middlewares?: ((req: any) => void)[];
   functionPropeties: {
     requestFunction: ModelFunctionList;
-    filter?: { [P in keyof ExtractType<T>]: number | string };
+    filter?: { [P in keyof ExtractType<T>]: number | string | boolean };
     modifiers?: Modifier<T>;
   };
   request: RequestAvailable;

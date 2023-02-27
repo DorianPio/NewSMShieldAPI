@@ -1,10 +1,11 @@
 import { Model, Schema, model } from "mongoose";
 
 interface IArticle {
-  title: String;
-  date: String;
-  content: String;
-  validated: Boolean;
+  title: string;
+  date: string;
+  content: string;
+  author: string;
+  validated: boolean;
 }
 
 interface IArticleMethods {}
@@ -15,7 +16,8 @@ const schema = new Schema<IArticle, ArticleModel, IArticleMethods>({
   title: { type: String, required: true },
   date: { type: String, required: true },
   content: { type: String, required: true },
-  validated: { type: Boolean, required: true, default: false },
+  author: { type: String, required: true },
+  validated: { type: Schema.Types.Boolean, required: true, default: false },
 });
 
 export const Article = model<IArticle, ArticleModel>("Article", schema);
