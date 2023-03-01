@@ -89,6 +89,13 @@ export function makeGenericRequest<T extends Model<any>>(
   };
 }
 
+/**
+ * Executes a generic function for each value in an array of values.
+ * @param {Array} values - The array of values to execute the function for.
+ * @param {function} executeGenericCode - The function to execute for each value.
+ * @param {...*} args - Additional arguments to pass to the executeGenericCode function.
+ */
+
 function makeForAndExecuteCode(
   values: any,
   executeGenericCode: (value: any, ...args: any) => void,

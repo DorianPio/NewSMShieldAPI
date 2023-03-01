@@ -85,6 +85,13 @@ export const checkIfUserIsValidated = async (req: any): Promise<void> => {
   }
 };
 
+/**
+ * Checks if a user is not yet validated based on their email address, and throws an error if they are already validated.
+ * @async
+ * @param {object} req - The HTTP request object containing either a query or a body with an email address.
+ * @throws {Error} Throws an error with a message indicating that the user has already been validated if the user is already validated.
+ */
+
 export const checkIfUserIsNotValidated = async (req: any): Promise<void> => {
   const result = await executeDBFunction(
     User,

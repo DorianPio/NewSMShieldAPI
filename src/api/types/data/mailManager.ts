@@ -10,6 +10,14 @@ interface dataVerificationEmail {
   __v: 0;
 }
 
+/**
+ * Sends an email to verify a user's email address.
+ * @param req - The request object from the client.
+ * @param res - The response object to send back to the client.
+ * @param data - The data object containing the email address, verification code, and creation date.
+ * @returns An object containing a success message.
+ */
+
 export const mailManager = async (
   req: any,
   res: any,
@@ -20,5 +28,5 @@ export const mailManager = async (
     "SM Shield - Vérification de votre adresse email",
     htmlContentOfMail(data.code)
   );
-  return { email: "E-Mail send successfuly" };
+  return { email: "Email sent successfuly" };
 };
