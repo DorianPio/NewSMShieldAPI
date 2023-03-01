@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { Article } from "../../../../database/Schema/article";
-import { makeRoute } from "../../../../makerRequest/makeRoutes";
-import { getDateMethod } from "../../../../utils/getDate";
-import { getValueInReturn } from "../../../../utils/getValueInReturn";
+import { Article } from "../../../database/Schema/article";
+import { makeRoute } from "../../../makerRequest/makeRoutes";
+import { getDateMethod } from "../../../utils/getDate";
+import { getValueInReturn } from "../../../utils/getValueInReturn";
 import { checkIfUserIsAdmin } from "../../middlewares/checkUser";
 
 export const articlesRoutes = (): Router[] => {
@@ -71,7 +71,7 @@ export const articlesRoutes = (): Router[] => {
       protectedRoute: true,
       request: "get",
       type: "SimpleRequest",
-      middlewares: [],
+      middlewares: [checkIfUserIsAdmin],
     },
 
     {
@@ -94,6 +94,29 @@ export const articlesRoutes = (): Router[] => {
       request: "get",
       type: "SimpleRequest",
       middlewares: [],
+    },
+
+    {
+      name: "Validated An Articles",
+      description: "Allow you to validate an article",
+      filter: [
+        {
+          key: "validated",
+          getter: () => getValueInReturn(true),
+        },
+        {
+          key: "_id",
+          getter: "body",
+        },
+      ],
+      functionPropeties: {
+        requestFunction: "updateOne",
+      },
+      path: "/articles",
+      protectedRoute: true,
+      request: "patch",
+      type: "SimpleRequest",
+      middlewares: [checkIfUserIsAdmin],
     },
   ]);
 };

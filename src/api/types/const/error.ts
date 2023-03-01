@@ -15,3 +15,12 @@ export const userAlreadyExist: string = "User already exist";
 export const badPassword: string = "Bad password";
 
 export const userNeedToBeAdmin: string = "You don't have permission to do that";
+
+export const userAlreadyValidated: string = "User already validated";
+
+export const userNotValidated: string = "User not validated";
+
+export const codeCreation: string =
+  "Error during the process of the creation of the code, please try again later";
+
+export const invalidUserAgent: string = "Invalid User-Agent";

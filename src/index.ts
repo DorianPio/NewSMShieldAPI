@@ -1,4 +1,4 @@
-import { connectToTheDatabase } from "./database/connection";
+import { connectToTheDatabase } from "./api/database/connection";
 import * as dotenv from "dotenv";
 dotenv.config();
 import express from "express";

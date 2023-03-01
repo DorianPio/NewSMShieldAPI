@@ -75,7 +75,8 @@ export type ModelFunctionList = TMP4<ModelFunctions>;
 
 type RequestAvailable = "get" | "delete" | "put" | "patch" | "post";
 
-type operationAfter = ((req: any, res: any, data: any) => void)[];
+type operationAfter = ((req: any, res: any, data: any) => any)[];
+type operationBefore = ((req: any) => any)[];
 // type test = ExtractType<typeof User>;
 
 type test = {
@@ -130,7 +131,6 @@ export type Creator<T extends Model<any>> = {
           | ((req: any, res: any) => Promise<string> | string | any);
       }
   )[];
-  middlewares?: ((req: any) => void)[];
   functionPropeties: {
     requestFunction: ModelFunctionList;
     filter?: { [P in keyof ExtractType<T>]: number | string | boolean };
@@ -139,6 +139,7 @@ export type Creator<T extends Model<any>> = {
   request: RequestAvailable;
   auth?: true;
   protectedRoute: false | true;
+  middlewares?: operationBefore;
   dataTransformer?: operationAfter;
 };
 

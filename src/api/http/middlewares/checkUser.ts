@@ -1,12 +1,13 @@
-import { User } from "../../../database/Schema/users";
+import { User } from "../../database/Schema/users";
 import {
   userAlreadyExist,
+  userAlreadyValidated,
   userDoesntExist,
   userNeedToBeAdmin,
-} from "../../../types/const/error";
-import { executeDBFunction } from "../../../types/const/functions/database/databaseFunction";
-import { displayInColor } from "../../../types/const/functions/displayInColor";
-import { getEmailByToken } from "../../../utils/getEmailByToken";
+  userNotValidated,
+} from "../../types/const/error";
+import { executeDBFunction } from "../../types/const/functions/database/databaseFunction";
+import { getEmailByToken } from "../../utils/getEmailByToken";
 
 /**
  * Check if a user exists in the database with the provided email.
@@ -17,7 +18,7 @@ import { getEmailByToken } from "../../../utils/getEmailByToken";
 export const checkIfUserExist = async (req: any): Promise<void> => {
   const result = await executeDBFunction(
     User,
-    { email: req.body.email },
+    { email: !req.body.email ? req.query.email : req.body.email },
     undefined,
     "findOne"
   );
@@ -35,7 +36,7 @@ export const checkIfUserExist = async (req: any): Promise<void> => {
 export const checkIfUserDoesntExist = async (req: any): Promise<void> => {
   const result = await executeDBFunction(
     User,
-    { email: req.body.email },
+    { email: !req.body.email ? req.query.email : req.body.email },
     undefined,
     "findOne"
   );
@@ -44,6 +45,14 @@ export const checkIfUserDoesntExist = async (req: any): Promise<void> => {
   }
 };
 
+/**
+ * Checks if the user making the request is an admin.
+ * If the user is not an admin, an error message is thrown.
+ * @param req - The request object that contains the Authorization header.
+ * @returns Promise<void>
+ * @throws Error - If the user making the request is not an admin.
+ */
+
 export const checkIfUserIsAdmin = async (req: any): Promise<void> => {
   const result = await executeDBFunction(
     User,
@@ -51,7 +60,39 @@ export const checkIfUserIsAdmin = async (req: any): Promise<void> => {
     { role: 1 },
     "findOne"
   );
-  if (result.role !== "admin") {
+  if (!result || result.role !== "admin") {
     throw new Error(userNeedToBeAdmin);
+  }
+};
+
+/**
+ * Checks if the user making the request is validated or not.
+ * If the user is not validated, an error message is thrown.
+ * @param req - The request object that contains the Authorization header.
+ * @returns Promise<void>
+ * @throws Error - If the user making the request is not validated.
+ */
+
+export const checkIfUserIsValidated = async (req: any): Promise<void> => {
+  const result = await executeDBFunction(
+    User,
+    { email: !req.body.email ? req.query.email : req.body.email },
+    { validated: 1 },
+    "findOne"
+  );
+  if (!result || !result.validated) {
+    throw new Error(userNotValidated);
+  }
+};
+
+export const checkIfUserIsNotValidated = async (req: any): Promise<void> => {
+  const result = await executeDBFunction(
+    User,
+    { email: !req.body.email ? req.query.email : req.body.email },
+    { validated: 1 },
+    "findOne"
+  );
+  if (!result || result.validated) {
+    throw new Error(userAlreadyValidated);
   }
 };

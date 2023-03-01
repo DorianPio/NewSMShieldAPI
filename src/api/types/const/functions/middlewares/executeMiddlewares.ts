@@ -1,5 +1,4 @@
 import { Model } from "mongoose";
-import { handleResponse } from "../../../../makerRequest/handleResponse";
 import { Creator } from "../../../request/types";
 
 /**

@@ -10,6 +10,15 @@ import { routerUse } from "../types/const/functions/routerUse";
 import { executeMiddlewares } from "../types/const/functions/middlewares/executeMiddlewares";
 import { handleFunctionAfterRoutage } from "./afterRoutage";
 
+/**
+
+Performs CRUD operations on a MongoDB collection using Express.js routes and middleware.
+@template T - A MongoDB model.
+@param {Creator<T>} creator - An object that contains the properties necessary to create the CRUD routes.
+@param {...any} args - Additional arguments needed for the function.
+@returns {void}
+*/
+
 function routerOperations<T extends Model<any>>(
   creator: Creator<T>,
   ...args: any
@@ -28,8 +37,9 @@ function routerOperations<T extends Model<any>>(
   router.use(creator.path, async (req, res, next) => {
     try {
       routerUse(creator, req);
-      await executeMiddlewares(creator, req, res);
-      next();
+      await executeMiddlewares(creator, req, res).then((res) => {
+        next();
+      });
     } catch (err: any) {
       handleResponse(res, 400, "", err.message);
     }
@@ -48,7 +58,8 @@ function routerOperations<T extends Model<any>>(
         creator.auth
       ).then(async (response) => {
         await handleFunctionAfterRoutage(req, res, response, creator).then(
-          () => {
+          (result) => {
+            response = result === undefined ? response : result;
             handleResponse(res, 200, response);
           }
         );

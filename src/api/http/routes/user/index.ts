@@ -1,13 +1,13 @@
 import { Router } from "express";
-import { User } from "../../../../database/Schema/users";
-import { makeRoute } from "../../../../makerRequest/makeRoutes";
+import { makeRoute } from "../../../makerRequest/makeRoutes";
+import { User } from "../../../database/Schema/users";
 import hash from "object-hash";
 import {
   checkIfUserDoesntExist,
   checkIfUserExist,
 } from "../../middlewares/checkUser";
-import { passwordCheckEquality } from "../../../../types/data/passwordCheck";
-import { getEmailByToken } from "../../../../utils/getEmailByToken";
+import { getEmailByToken } from "../../../utils/getEmailByToken";
+import { passwordCheckEquality } from "../../../types/data/passwordCheck";
 
 export const userRoutes = (): Router[] => {
   const routers: Router[] = makeRoute(User, [
@@ -53,7 +53,7 @@ export const userRoutes = (): Router[] => {
       filter: [
         {
           key: "email",
-          getter: (req) => getEmailByToken(req.get("Authorization")),
+          getter: (req: any) => getEmailByToken(req.get("Authorization")),
         },
       ],
       functionPropeties: {
@@ -122,7 +122,7 @@ export const userRoutes = (): Router[] => {
         },
         {
           key: "password",
-          getter: (req) => hash(req.body.password),
+          getter: (req: any) => hash(req.body.password),
         },
         {
           key: "name",
@@ -153,7 +153,7 @@ export const userRoutes = (): Router[] => {
         },
         {
           key: "password",
-          getter: (req) => hash(req.body.password),
+          getter: (req: any) => hash(req.body.password),
         },
       ],
       functionPropeties: {

@@ -3,7 +3,7 @@ import { Model, Schema, model } from "mongoose";
 interface IVerificationEmail {
   code: String;
   email: String;
-  creation: Date;
+  createdAt: Date;
 }
 
 interface IVerificationEmailMethods {}
@@ -21,7 +21,7 @@ const schema = new Schema<
 >({
   email: { type: String, required: true },
   code: { type: String, required: true },
-  creation: { type: Date, required: true },
+  createdAt: { type: Date, expires: "24h" },
 });
 
 export const VerificationEmail = model<
