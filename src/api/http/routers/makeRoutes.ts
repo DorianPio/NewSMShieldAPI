@@ -1,6 +1,8 @@
 import { Router } from "express";
 import { articlesRoutes } from "../routes/article";
 import { emailRoutes } from "../routes/email";
+import { graphRoutes } from "../routes/graphic";
+import { newsRoutes } from "../routes/news";
 import { userRoutes } from "../routes/user";
 
 /**
@@ -13,6 +15,8 @@ export function mergeRoutes(): Router[] {
     userRoutes(),
     articlesRoutes(),
     emailRoutes(),
+    newsRoutes(),
+    graphRoutes()
   ];
 
   const finalArray: Router[] = routesArrays.reduce(
