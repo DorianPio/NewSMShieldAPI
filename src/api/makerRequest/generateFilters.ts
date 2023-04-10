@@ -51,3 +51,34 @@ async function generateFilterValue(filter: any, req: any, res: Response) {
   }
   return await filter.getter(req, res);
 }
+
+/**
+ * Asynchronously iterates over the keys of an input object and modifies its
+ * properties based on their types and values.
+ *
+ * @param obj The input object to iterate over.
+ * @param req The request object to use as an argument for any functions encountered in the input object.
+ */
+
+export function loopOverKeys(obj: any, req: any): {} {
+  const overKeys: any = {};
+
+  for (let key in obj) {
+    if (typeof obj[key] === "function") {
+      overKeys[key] = obj[key](req);
+    } else {
+      if (key.includes("$")) {
+        for (let item in obj[key]) {
+          if (typeof obj[key][item] === "function") {
+            overKeys[key] = { [item]: obj[key][item](req) };
+          } else {
+            overKeys[key] = { [item]: obj[key][item] };
+          }
+        }
+      } else {
+        overKeys[key] = obj[key];
+      }
+    }
+  }
+  return overKeys;
+}

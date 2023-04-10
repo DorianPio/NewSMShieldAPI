@@ -8,6 +8,8 @@ import {
 } from "../../middlewares/checkUser";
 import { getEmailByToken } from "../../../utils/getEmailByToken";
 import { passwordCheckEquality } from "../../../types/data/passwordCheck";
+import { applyModification } from "../../../types/const/functions/other/getValueInSomeValue";
+import { getValueInReturn } from "../../../utils/getValueInReturn";
 
 export const userRoutes = (): Router[] => {
   const routers: Router[] = makeRoute(User, [
@@ -99,6 +101,53 @@ export const userRoutes = (): Router[] => {
       },
       request: "delete",
       protectedRoute: true,
+    },
+
+    {
+      name: "ModUser",
+      description: "Allow you to modify something about an user",
+      type: "SimpleRequest",
+      path: "/users",
+      filter: [
+        {
+          key: "_id",
+          getter: "query",
+        },
+        {
+          key: "email",
+          getter: () => getValueInReturn("default"),
+        },
+        {
+          key: "name",
+          getter: () => getValueInReturn("default"),
+        },
+        {
+          key: "phoneNumber",
+          getter: () => getValueInReturn("default"),
+        },
+        {
+          key: "photo",
+          getter: () => getValueInReturn("default"),
+        },
+        {
+          key: "gender",
+          getter: () => getValueInReturn("default"),
+        },
+        {
+          key: "birthDate",
+          getter: () => getValueInReturn("default"),
+        },
+        {
+          key: "age",
+          getter: () => getValueInReturn("default"),
+        },
+      ],
+      functionPropeties: {
+        requestFunction: "findById",
+      },
+      request: "patch",
+      protectedRoute: true,
+      dataTransformer: [applyModification],
     },
     /**
      * Auth

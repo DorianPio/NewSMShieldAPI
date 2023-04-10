@@ -4,18 +4,16 @@ interface IUser {
   email: string;
   password: string;
   name: string;
-  role: string; 
+  role: "utilisateur" | "admin" | "support";
   photo: string;
   age: number;
   birthDate: string;
   phoneNumber: string;
-  tokens: Object;
+  gender: string;
   validated: boolean;
 }
 
-interface IUserMethods {
-  findOneUserByEmail(): any;
-}
+interface IUserMethods {}
 
 type UserModel = Model<IUser, {}, IUserMethods>;
 
@@ -31,16 +29,9 @@ const schema = new Schema<IUser, UserModel, IUserMethods>({
   birthDate: { type: String, required: false },
   phoneNumber: { type: String, required: false },
   age: { type: Number, required: false },
+  gender: { type: String, required: false },
   role: { type: String, required: true, default: "utilisateur" },
-  tokens: {
-    twitter_access_token: { type: String, required: false },
-    twitter_access_token_secret: { type: String, required: false },
-    twitter_uid: { type: String, require: false },
-  },
   validated: { type: Boolean, required: true, default: false },
 });
 
-schema.method("findOneUserByEmail", function findOneUserByEmail() {
-  return model("User").findOne({ email: this.email });
-});
 export const User = model<IUser, UserModel>("User", schema);

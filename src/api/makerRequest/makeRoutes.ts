@@ -1,5 +1,7 @@
 import { Router } from "express";
 import { Model } from "mongoose";
+import { parseJsonArray } from "../../lib/JSONParser";
+import { APIobject } from "../../lib/types/objectType";
 import { RouteCreator } from "../types/request/types";
 import { makeGenericRequest } from "./makeGenericRequest";
 
@@ -16,6 +18,10 @@ export function makeRoute<T extends Model<any>>(
   creators: RouteCreator<T>[]
 ): Router[] {
   const routers: Array<Router> = [];
+  if (process.env.DOCUMENTATION) {
+    parseJsonArray(creators as Array<APIobject>, model);
+  }
+  
   for (const elem of creators) {
     const element = getters[elem.type](model, Array(elem));
     routers.push(element);

@@ -3,7 +3,7 @@ import { Model } from "mongoose";
 import { Creator } from "../types/request/types";
 import { handleDatabaseRequest } from "../database/request/handleRequest";
 import { handleResponse } from "./handleResponse";
-import { generateFilters } from "./generateFilters";
+import { generateFilters, loopOverKeys } from "./generateFilters";
 import { checkIfIsEmpty, errorManage } from "../types/const/functions/error";
 import { makeGenericRequestError } from "../types/const/error";
 import { routerUse } from "../types/const/functions/routerUse";
@@ -37,9 +37,7 @@ function routerOperations<T extends Model<any>>(
   router.use(creator.path, async (req, res, next) => {
     try {
       routerUse(creator, req);
-      await executeMiddlewares(creator, req, res).then((res) => {
-        next();
-      });
+      next();
     } catch (err: any) {
       handleResponse(res, 400, "", err.message);
     }
@@ -48,14 +46,20 @@ function routerOperations<T extends Model<any>>(
   router[creator.request](creator.path, async (req, res, next) => {
     try {
       const filters = await generateFilters(creator, req, res);
+      await executeMiddlewares(creator, req, res);
+      const overKeys = loopOverKeys(
+        creator.functionPropeties.filter,
+        req
+      ) as any;
 
       await handleDatabaseRequest(
         creator.functionPropeties.requestFunction,
         model,
         filters,
-        creator.functionPropeties.filter,
+        overKeys,
         creator.functionPropeties.modifiers,
-        creator.auth
+        creator.auth,
+        creator
       ).then(async (response) => {
         await handleFunctionAfterRoutage(req, res, response, creator).then(
           (result) => {

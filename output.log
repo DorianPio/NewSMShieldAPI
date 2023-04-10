@@ -1,0 +1,14 @@
+
+> api-typescript@1.0.0 documentation
+> export DOCUMENTATION=true && rm -f ./src/documentation/*.json && ts-node-dev --exit-child --transpile-only src/index.ts
+
+[INFO] 16:54:28 ts-node-dev ver. 1.1.8 (using ts-node ver. 9.1.1, typescript ver. 4.9.5)
+(node:10741) [MONGOOSE] DeprecationWarning: Mongoose: the `strictQuery` option will be switched back to `false` by default in Mongoose 7. Use `mongoose.set('strictQuery', false);` if you want to prepare for this change. Or use `mongoose.set('strictQuery', true);` to suppress this warning.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Api listening on port 3000
+Le fichier ./documentation/data_40.json a été créé et les données ont été écrites.
+Le fichier ./documentation/data_41.json a été créé et les données ont été écrites.
+Le fichier ./documentation/data_43.json a été créé et les données ont été écrites.
+Le fichier ./documentation/data_44.json a été créé et les données ont été écrites.
+Le fichier ./documentation/data_42.json a été créé et les données ont été écrites.
+Database connection successful

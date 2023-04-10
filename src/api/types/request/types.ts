@@ -1,5 +1,5 @@
-import { Model, Schema, model } from "mongoose";
-import { User } from "../../database/Schema/users";
+import { Model, Schema, model, UpdateQuery } from "mongoose";
+import { QueryOptions } from "mongoose";
 
 /**
  * Extract the basic type given to the Model
@@ -13,7 +13,11 @@ import { User } from "../../database/Schema/users";
 export type ExtractType<T extends Model<any>> = T["schema"]["obj"] & {
   _id?: Schema.Types.ObjectId;
   __v?: number;
+  email?: string;
 };
+
+export type ExtractTypeQuery<T extends Model<any>> = ExtractType<T> &
+  UpdateQuery<T>;
 
 /**
  * P in keyof T is a for on the all function like sort...
@@ -35,8 +39,10 @@ export type Parametize<T extends {}> = {
 };
 
 export type Modifier<T extends Model<any>> = Parametize<
-  ReturnType<T["findOne"]>
+  ReturnType<T["findOneAndUpdate"]>
 >;
+
+export type Options = QueryOptions;
 
 // type TMP = "abc" | "adc" | "bca";
 // type TMP2<K extends string> = K extends `a${any}` ? K : never;
@@ -133,14 +139,29 @@ export type Creator<T extends Model<any>> = {
   )[];
   functionPropeties: {
     requestFunction: ModelFunctionList;
-    filter?: { [P in keyof ExtractType<T>]: number | string | boolean };
-    modifiers?: Modifier<T>;
+    filter?: {
+      [P in keyof ExtractTypeQuery<T>]:
+        | number
+        | string
+        | boolean
+        | ((req: any, res: any) => any)
+        | UpdateQuery<T>;
+    };
+    modifiers?: Options;
   };
   request: RequestAvailable;
   auth?: true;
+  exempt?: true;
   protectedRoute: false | true;
   middlewares?: operationBefore;
   dataTransformer?: operationAfter;
+  otherParams?: Array<{
+    key: string;
+    getter:
+      | "query"
+      | "body"
+      | ((req: any, res: any) => Promise<string> | string | any);
+  }>;
 };
 
 /**

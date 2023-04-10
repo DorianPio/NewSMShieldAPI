@@ -71,7 +71,6 @@ export const articlesRoutes = (): Router[] => {
       protectedRoute: true,
       request: "get",
       type: "SimpleRequest",
-      middlewares: [checkIfUserIsAdmin],
     },
 
     {
